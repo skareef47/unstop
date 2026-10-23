@@ -1,0 +1,41 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: psai-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: psai_db
+      POSTGRES_USER: psai_user
+      POSTGRES_PASSWORD: psai_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - psai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U psai_user -d psai_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: psai-backend
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql+psycopg://psai_user:psai_password@db:5432/psai_db
+      - ENVIRONMENT=development
+      - DEBUG=True
+      - SECRET_KEY=psai-docker-secret-key-1234567890
+      - LLM_PROVIDER=mock
+      - EMBEDDING_PROVIDER=local
+      - ADMIN_API_KEY=psai-admin-secret-key-2026
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  psai_pgdata:
