@@ -133,7 +133,16 @@ def health_check():
 # Mount API v1 router
 app.include_router(api_router, prefix=settings.API_V1_STR)
 
+# Mount Frontend Static Assets
+import os
+from fastapi.staticfiles import StaticFiles
+
+_frontend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "frontend"))
+if os.path.exists(_frontend_dir):
+    app.mount("/", StaticFiles(directory=_frontend_dir, html=True), name="frontend")
+
 
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)
+

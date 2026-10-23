@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html class="h-full" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>PSAI // Support Operations &amp; Live Diagnostic Hub</title>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- Fonts: Inter & JetBrains Mono -->
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+  
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "error-container": "#ffdad6",
+            "on-secondary-fixed-variant": "#474746",
+            "surface-container-highest": "#e3e3de",
+            "on-primary-fixed-variant": "#930002",
+            "on-tertiary-fixed": "#1b1c1c",
+            "on-primary-container": "#fff6f5",
+            "tertiary-fixed-dim": "#c7c6c6",
+            "outline-variant": "#e5bdb7",
+            "surface-dim": "#dbdad5",
+            "surface-tint": "#bc140d",
+            "surface-bright": "#faf9f4",
+            "primary": "#b50c08",
+            "outline": "#906f6a",
+            "tertiary-container": "#727272",
+            "on-secondary-fixed": "#1c1b1b",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-surface": "#1b1c19",
+            "tertiary-fixed": "#e3e2e2",
+            "on-secondary-container": "#636262",
+            "on-primary": "#ffffff",
+            "tertiary": "#595a5a",
+            "on-background": "#1b1c19",
+            "secondary-fixed-dim": "#c8c6c5",
+            "inverse-surface": "#30312e",
+            "primary-fixed-dim": "#ffb4a8",
+            "primary-fixed": "#ffdad5",
+            "surface-container-low": "#f5f4ef",
+            "surface": "#faf9f4",
+            "background": "#faf9f4",
+            "on-primary-fixed": "#410000",
+            "surface-container": "#efeee9",
+            "surface-variant": "#e3e3de",
+            "on-surface-variant": "#5c403b",
+            "on-tertiary-container": "#faf8f8",
+            "inverse-on-surface": "#f2f1ec",
+            "surface-container-high": "#e9e8e3",
+            "error": "#ba1a1a",
+            "secondary": "#5f5e5e",
+            "secondary-fixed": "#e5e2e1",
+            "on-tertiary-fixed-variant": "#464747",
+            "inverse-primary": "#ffb4a8",
+            "secondary-container": "#e2dfde",
+            "primary-container": "#d92d20",
+            "on-secondary": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline-md": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "headline-lg-mobile": ["Inter", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "label-md": ["Inter", "sans-serif"],
+            "code-sm": ["JetBrains Mono", "monospace"],
+            "headline-lg": ["Inter", "sans-serif"],
+            "headline-sm": ["Inter", "sans-serif"],
+            "code-md": ["JetBrains Mono", "monospace"],
+            "display-lg": ["Inter", "sans-serif"],
+            "body-lg": ["Inter", "sans-serif"],
+            "label-sm": ["Inter", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-md": ["24px", { "lineHeight": "28px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "headline-lg-mobile": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "code-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0em", "fontWeight": "500" }],
+            "headline-lg": ["36px", { "lineHeight": "40px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-sm": ["18px", { "lineHeight": "24px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "code-md": ["13px", { "lineHeight": "18px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "display-lg": ["48px", { "lineHeight": "52px", "letterSpacing": "-0.03em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "400" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }]
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 16px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #ECEBE5;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #737373;
+    }
+    .border-hairline {
+      border-color: #DEDED8;
+    }
+    .badge-square {
+      border-radius: 0px !important;
+    }
+    .tab-active {
+      background-color: #ffffff !important;
+      color: #1b1c19 !important;
+      border-left: 3px solid #b50c08 !important;
+      font-weight: 500 !important;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-low text-on-surface antialiased font-body-md h-full selection:bg-on-surface selection:text-surface-container-lowest">
+
+  <!-- ================= TOP UTILITY HEADER ================= -->
+  <header class="fixed top-0 left-0 right-0 h-12 bg-surface-container-lowest z-40 border-b border-surface-container-highest flex items-center justify-between px-4 lg:px-6 select-none">
+    <!-- Brand Anchor & Micro Search -->
+    <div class="flex items-center space-x-6">
+      <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('dashboard')">
+        <span class="text-headline-sm font-headline-sm font-semibold tracking-tight text-on-surface uppercase">PSAI</span>
+        <span class="text-code-sm font-code-sm text-secondary tracking-widest pl-2 border-l border-surface-container-highest hidden sm:inline">DIAGNOSE SMARTER. RESOLVE FASTER.</span>
+      </div>
+      <!-- Quick Context Search -->
+      <div class="relative hidden md:flex items-center bg-surface-container-low border border-hairline px-2.5 py-1 w-72">
+        <span class="material-symbols-outlined text-secondary mr-2">search</span>
+        <input id="global-search-input" class="bg-transparent border-0 p-0 text-code-sm font-code-sm placeholder:text-secondary focus:ring-0 w-full text-on-surface" placeholder="Query verified telemetry, chunks..." type="text"/>
+        <span class="text-code-sm font-code-sm text-secondary bg-surface-container-highest px-1 border border-hairline cursor-pointer" onclick="document.getElementById('global-search-input').focus()">⌘K</span>
+        
+        <!-- Live Search Results Dropdown -->
+        <div id="search-results-dropdown" class="hidden absolute top-10 left-0 right-0 bg-surface-container-lowest border border-hairline shadow-lg z-50 p-2 text-code-sm max-h-64 overflow-y-auto"></div>
+      </div>
+    </div>
+
+    <!-- Telemetry Status & Session Coordinates -->
+    <div class="flex items-center space-x-4 lg:space-x-6 text-code-sm font-code-sm">
+      <div class="hidden lg:flex items-center space-x-2 text-secondary">
+        <span class="text-on-surface font-medium">Cluster: US-East-1</span>
+        <span class="text-surface-container-highest">/</span>
+        <span class="text-on-surface font-medium">Env: Production</span>
+      </div>
+
+      <!-- WebSocket & Backend Pulse Node -->
+      <div class="flex items-center space-x-2 bg-surface-container-low px-2.5 py-1 border border-hairline" id="backend-status-pill">
+        <span class="w-2 h-2 bg-[#2F6B4F] inline-block animate-pulse" id="backend-status-dot"></span>
+        <span class="text-[#2F6B4F] font-code-sm" id="backend-latency">BACKEND: --</span>
+        <span class="text-secondary font-code-sm">|</span>
+        <span class="text-[#2F6B4F] font-code-sm uppercase" id="ws-status">WS: LIVE</span>
+      </div>
+
+      <!-- Trailing Action Badges & Session Info -->
+      <div class="flex items-center space-x-3 pl-3 border-l border-surface-container-highest">
+        <div class="text-right hidden sm:block">
+          <div class="text-label-sm font-label-sm text-on-surface uppercase font-semibold">Role: Site Lead</div>
+          <div class="text-code-sm font-code-sm text-secondary">OP_ID: #L4-8491</div>
+        </div>
+        <button onclick="openIntakeModal()" class="bg-on-surface text-surface-container-lowest px-3 py-1.5 text-label-sm font-label-sm hover:bg-black transition-colors duration-100 flex items-center space-x-1.5">
+          <span class="material-symbols-outlined text-surface-container-lowest">add</span>
+          <span class="hidden sm:inline">Intake Incident</span>
+        </button>
+        <div class="flex items-center space-x-1 text-secondary">
+          <button onclick="refreshAllData()" class="hover:text-on-surface transition-colors p-1" title="Telemetry Sync">
+            <span class="material-symbols-outlined" id="sync-spinner">sync</span>
+          </button>
+        </div>
+        <!-- Operator session glyph -->
+        <div class="w-7 h-7 bg-surface-container-high border border-hairline flex items-center justify-center font-code-sm font-semibold text-on-surface" title="Operator profile session identifier">
+          SL
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= MECHANICAL SIDE DRAWER ================= -->
+  <aside class="fixed left-0 top-12 bottom-0 w-64 lg:w-80 bg-surface-container-low border-r border-surface-container-highest z-30 flex flex-col justify-between select-none">
+    <div>
+      <!-- Drawer Header -->
+      <div class="p-4 border-b border-surface-container-highest bg-surface-container-low">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-label-sm font-label-sm tracking-wider text-secondary uppercase">PSAI // TELEMETRY</div>
+            <div class="text-code-sm font-code-sm font-semibold text-on-surface">KERNEL 6.12-REALTIME</div>
+          </div>
+          <span class="inline-flex items-center px-1.5 py-0.5 border border-[#2F6B4F] text-[#2F6B4F] text-code-sm font-code-sm bg-surface-container-lowest">
+            00_OK
+          </span>
+        </div>
+      </div>
+
+      <!-- Action Button: Initiate Diagnostics -->
+      <div class="p-3 border-b border-surface-container-highest">
+        <button onclick="openIntakeModal()" class="w-full bg-surface-container-lowest border border-hairline hover:border-on-surface text-on-surface py-2 px-3 text-label-md font-label-md flex items-center justify-between group transition-colors">
+          <span class="flex items-center space-x-2">
+            <span class="material-symbols-outlined text-primary-container">troubleshoot</span>
+            <span>Initiate Diagnostics</span>
+          </span>
+          <span class="text-code-sm font-code-sm text-secondary group-hover:text-on-surface">CTRL+D</span>
+        </button>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="py-2" id="nav-tabs">
+        <!-- Tab 1: Dashboard -->
+        <a id="nav-tab-dashboard" onclick="switchTab('dashboard')" class="flex items-center justify-between px-4 py-2.5 tab-active transition-colors cursor-pointer" href="#dashboard">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined text-primary">dashboard</span>
+            <span>Dashboard</span>
+          </div>
+          <span class="text-code-sm font-code-sm bg-surface-container-high px-1.5 py-0.2 border border-hairline text-on-surface font-semibold" id="tab-badge-dashboard">LIVE</span>
+        </a>
+        <!-- Tab 2: AI Troubleshooting -->
+        <a id="nav-tab-troubleshooting" onclick="switchTab('troubleshooting')" class="flex items-center justify-between px-4 py-2.5 text-secondary hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors cursor-pointer" href="#troubleshooting">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined">troubleshoot</span>
+            <span>AI Troubleshooting</span>
+          </div>
+          <span class="text-code-sm font-code-sm text-secondary" id="tab-badge-troubleshooting">READY</span>
+        </a>
+        <!-- Tab 3: Incidents & Tickets -->
+        <a id="nav-tab-incidents" onclick="switchTab('incidents')" class="flex items-center justify-between px-4 py-2.5 text-secondary hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors cursor-pointer" href="#incidents">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined">warning</span>
+            <span>Incidents &amp; Tickets</span>
+          </div>
+          <span class="text-code-sm font-code-sm text-secondary font-semibold" id="tab-badge-incidents">0</span>
+        </a>
+        <!-- Tab 4: Command Center -->
+        <a id="nav-tab-command" onclick="switchTab('command')" class="flex items-center justify-between px-4 py-2.5 text-secondary hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors cursor-pointer" href="#command">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined">terminal</span>
+            <span>Command Center</span>
+          </div>
+          <span class="text-code-sm font-code-sm text-secondary">CLI</span>
+        </a>
+        <!-- Tab 5: Knowledge Base -->
+        <a id="nav-tab-kb" onclick="switchTab('kb')" class="flex items-center justify-between px-4 py-2.5 text-secondary hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors cursor-pointer" href="#kb">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined">menu_book</span>
+            <span>Knowledge Base</span>
+          </div>
+          <span class="text-code-sm font-code-sm text-secondary" id="tab-badge-kb">3 docs</span>
+        </a>
+        <!-- Tab 6: Admin Analytics -->
+        <a id="nav-tab-analytics" onclick="switchTab('analytics')" class="flex items-center justify-between px-4 py-2.5 text-secondary hover:bg-surface-container hover:text-on-surface text-label-md font-label-md transition-colors cursor-pointer" href="#analytics">
+          <div class="flex items-center space-x-3">
+            <span class="material-symbols-outlined">query_stats</span>
+            <span>Admin Analytics</span>
+          </div>
+          <span class="text-code-sm font-code-sm text-secondary">VERIFIED</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Drawer Footer & Integrity Mandate Indicator -->
+    <div class="border-t border-surface-container-highest bg-surface-container-low">
+      <!-- Zero-Simulation Strict Proof -->
+      <div class="p-3 border-b border-surface-container-highest bg-surface-container">
+        <div class="flex items-start space-x-2">
+          <span class="material-symbols-outlined text-[#2F6B4F] text-base mt-0.5">verified_user</span>
+          <div>
+            <div class="text-label-sm font-label-sm font-semibold text-on-surface">Zero-Simulation Mode: Active</div>
+            <div class="text-code-sm font-code-sm text-secondary leading-tight mt-0.5">
+              Strict Zero-Dummy-Data policy. All metrics and telemetry bound to verified database records.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="p-2.5 text-[11px] font-code-sm text-secondary flex items-center justify-between">
+        <span>PSAI v1.0.0-PROD</span>
+        <span class="text-[#2F6B4F]">INTEGRITY_OK</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN OPERATIONAL CONTENT CANVAS ================= -->
+  <main class="ml-64 lg:ml-80 pt-12 min-h-screen pb-12 bg-surface-container-low">
+    <div class="px-4 lg:px-8 py-6 space-y-6 max-w-[1680px]">
+
+      <!-- ================= VIEW 1: DASHBOARD ================= -->
+      <div id="view-dashboard" class="space-y-6">
+        <!-- Action & Filter Bar Header -->
+        <div class="flex flex-col md:flex-row md:items-end justify-between border-b border-hairline pb-4 gap-4">
+          <div>
+            <div class="flex items-center space-x-3 mb-1">
+              <h1 class="text-headline-md font-headline-md text-on-surface">Support Operations &amp; Live Diagnostic Hub</h1>
+              <span class="bg-[#ECEBE5] border border-hairline text-secondary text-code-sm font-code-sm px-2 py-0.5" id="db-read-timestamp">DB_READ: --:--:-- UTC</span>
+            </div>
+            <p class="text-body-sm font-body-sm text-secondary">
+              Continuous real-time incident ingestion, AI diagnostic reasoning engine, and remediation execution bus.
+            </p>
+          </div>
+          <!-- Filter Controls -->
+          <div class="flex items-center space-x-2">
+            <div class="inline-flex border border-hairline bg-surface-container-lowest p-0.5 text-code-sm font-code-sm">
+              <button onclick="setIncidentFilter('all')" id="btn-filter-all" class="px-3 py-1 bg-on-surface text-surface-container-lowest font-medium">All Severities</button>
+              <button onclick="setIncidentFilter('P1')" id="btn-filter-p1" class="px-3 py-1 text-secondary hover:text-on-surface transition-colors">P1 Critical</button>
+              <button onclick="setIncidentFilter('P2')" id="btn-filter-p2" class="px-3 py-1 text-secondary hover:text-on-surface transition-colors">P2 Warning</button>
+              <button onclick="setIncidentFilter('resolved')" id="btn-filter-resolved" class="px-3 py-1 text-secondary hover:text-on-surface transition-colors">Resolved</button>
+            </div>
+            <button onclick="refreshAllData()" class="bg-surface-container-lowest border border-hairline px-3 py-1.5 text-label-md font-label-md text-on-surface hover:border-on-surface flex items-center space-x-1.5">
+              <span class="material-symbols-outlined text-secondary">refresh</span>
+              <span>Refresh</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ================= PRIMARY METRICS GRID (VERIFIED DATA ONLY) ================= -->
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Metric 1: Open Tickets -->
+          <div class="bg-surface-container-lowest border border-hairline p-4">
+            <div class="flex items-center justify-between text-secondary mb-1">
+              <span class="text-label-sm font-label-sm uppercase">Open Tickets</span>
+              <span class="text-code-sm font-code-sm text-[#2F6B4F]" id="metric-open-status">SYNCED</span>
+            </div>
+            <div class="text-headline-lg font-headline-lg text-on-surface" id="metric-open-tickets">0</div>
+            <div class="mt-2 pt-2 border-t border-hairline text-code-sm font-code-sm text-secondary flex items-center justify-between">
+              <span>Verified DB records</span>
+              <span class="text-on-surface font-medium" id="metric-open-sub">0 active</span>
+            </div>
+          </div>
+
+          <!-- Metric 2: Mean Time to Detect (MTTD) -->
+          <div class="bg-surface-container-lowest border border-hairline p-4">
+            <div class="flex items-center justify-between text-secondary mb-1">
+              <span class="text-label-sm font-label-sm uppercase">MTTD (Live Avg)</span>
+              <span class="text-code-sm font-code-sm text-secondary" id="metric-mttd-sample">N=0</span>
+            </div>
+            <div class="text-headline-lg font-headline-lg text-on-surface" id="metric-mttd">Unavailable</div>
+            <div class="mt-2 pt-2 border-t border-hairline text-code-sm font-code-sm text-secondary flex items-center justify-between">
+              <span id="metric-mttd-note">Insufficient sample size (n=0)</span>
+            </div>
+          </div>
+
+          <!-- Metric 3: AI Automated Triage Rate -->
+          <div class="bg-surface-container-lowest border border-hairline p-4">
+            <div class="flex items-center justify-between text-secondary mb-1">
+              <span class="text-label-sm font-label-sm uppercase">AI Triage Rate</span>
+              <span class="text-code-sm font-code-sm text-primary-container">GATEWAY</span>
+            </div>
+            <div class="text-headline-lg font-headline-lg text-on-surface" id="metric-triage-rate">0.0%</div>
+            <div class="mt-2 pt-2 border-t border-hairline text-code-sm font-code-sm text-secondary flex items-center justify-between">
+              <span>Verified Gateway</span>
+              <span class="text-on-surface font-medium" id="metric-triage-sub">Ready</span>
+            </div>
+          </div>
+
+          <!-- Metric 4: SLA Breach Risk -->
+          <div class="bg-surface-container-lowest border border-hairline p-4">
+            <div class="flex items-center justify-between text-secondary mb-1">
+              <span class="text-label-sm font-label-sm uppercase">SLA Breach Risk</span>
+              <span class="text-code-sm font-code-sm text-[#2F6B4F]" id="metric-sla-badge">0 BREACHES</span>
+            </div>
+            <div class="text-headline-lg font-headline-lg text-on-surface" id="metric-sla">0</div>
+            <div class="mt-2 pt-2 border-t border-hairline text-code-sm font-code-sm text-secondary flex items-center justify-between">
+              <span>Critical threshold</span>
+              <span class="text-on-surface" id="metric-sla-sub">100.0% SLA Target</span>
+            </div>
+          </div>
+
+          <!-- Metric 5: CSAT (Honest Empty State per Zero-Simulation Rule) -->
+          <div class="bg-surface-container-lowest border border-hairline p-4 relative overflow-hidden">
+            <div class="flex items-center justify-between text-secondary mb-1">
+              <span class="text-label-sm font-label-sm uppercase">Customer CSAT</span>
+              <span class="text-code-sm font-code-sm text-secondary">N &lt; 30</span>
+            </div>
+            <div class="text-headline-sm font-headline-sm text-secondary italic mt-1">Unavailable</div>
+            <div class="mt-2 pt-2 border-t border-hairline text-code-sm font-code-sm text-secondary">
+              Insufficient survey sample size (n=0). Suppressed per integrity rule.
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= OPERATIONAL SPLIT WORKBENCH ================= -->
+        <section class="grid grid-cols-1 xl:grid-cols-12 gap-6">
+          
+          <!-- ================= LEFT COLUMN: ACTIVE INCIDENTS QUEUE ================= -->
+          <div class="xl:col-span-6 space-y-4">
+            <div class="bg-surface-container-lowest border border-hairline">
+              <!-- Header Section with State Toggles -->
+              <div class="p-3 bg-[#ECEBE5] border-b border-hairline flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                  <span class="text-label-md font-label-md font-semibold text-on-surface">Active Incidents Queue</span>
+                  <span class="bg-surface-container-lowest border border-hairline text-code-sm font-code-sm px-1.5 py-0.2" id="incidents-count-badge">0 Streamed</span>
+                </div>
+                <div class="flex items-center space-x-2 text-code-sm font-code-sm">
+                  <button onclick="openIntakeModal()" class="px-2 py-0.5 bg-surface-container-lowest border border-hairline hover:border-on-surface text-on-surface font-medium flex items-center space-x-1">
+                    <span class="material-symbols-outlined text-xs">add</span>
+                    <span>New Incident</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Table Container -->
+              <div class="overflow-x-auto" id="incidents-table-container">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="border-b border-hairline bg-surface-container-low text-secondary text-label-sm font-label-sm uppercase">
+                      <th class="py-2.5 px-3 font-semibold">Incident ID</th>
+                      <th class="py-2.5 px-3 font-semibold">Customer / Org</th>
+                      <th class="py-2.5 px-3 font-semibold">Sev</th>
+                      <th class="py-2.5 px-3 font-semibold">Issue Telemetry</th>
+                      <th class="py-2.5 px-3 font-semibold text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#DEDED8] text-body-sm font-body-sm" id="incidents-table-body">
+                    <!-- Populated dynamically via PSAI API -->
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- Swiss Minimalist Honest Empty State Container (Screen 2 Pattern) -->
+              <div class="p-8 text-center bg-surface-container-lowest" id="incidents-empty-state">
+                <div class="inline-block border border-hairline px-3 py-1 font-code-sm text-code-sm text-secondary mb-3 bg-surface-container-low">
+                  STATUS_CODE: 00_NO_ACTIVE_P0_INCIDENTS
+                </div>
+                <p class="text-body-md font-body-md text-secondary max-w-sm mx-auto mb-4">
+                  No active incidents recorded in the persistent database. Real-time telemetry bus is healthy and standing by.
+                </p>
+                <button onclick="openIntakeModal()" class="border border-on-surface bg-surface-container-lowest px-4 py-1.5 text-label-md font-label-md text-on-surface hover:bg-surface-container-low transition-colors inline-flex items-center space-x-1.5">
+                  <span class="material-symbols-outlined">add_circle</span>
+                  <span>Intake New Real Technical Case</span>
+                </button>
+              </div>
+
+              <!-- Table Footer Metadata -->
+              <div class="p-2.5 bg-surface-container-low border-t border-hairline flex items-center justify-between text-code-sm font-code-sm text-secondary">
+                <span id="incidents-footer-streaming">Streaming verified tickets from SQLite / Postgres</span>
+                <span class="flex items-center space-x-1">
+                  <span class="w-1.5 h-1.5 bg-[#2F6B4F] inline-block"></span>
+                  <span>Poll interval: 4000ms</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Secondary Operational Module: Real-time Ingestion Stream -->
+            <div class="bg-surface-container-lowest border border-hairline">
+              <div class="p-3 bg-[#ECEBE5] border-b border-hairline flex items-center justify-between">
+                <span class="text-label-md font-label-md font-semibold text-on-surface">Live Ingress Event Log</span>
+                <span class="text-code-sm font-code-sm text-secondary" id="event-log-buffer-count">BUFFER: 0 ENTRIES</span>
+              </div>
+              <div class="p-3 font-code-sm text-code-sm space-y-1.5 bg-surface-container-lowest overflow-y-auto max-h-48 text-on-surface" id="live-event-log-container">
+                <!-- Live WebSocket & telemetry events -->
+                <div class="flex items-start space-x-2 text-secondary">
+                  <span>[INIT]</span>
+                  <span class="text-[#2F6B4F]">[SOCKET]</span>
+                  <span>WebSocket connection initialized to /api/v1/ws/dashboard.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================= RIGHT COLUMN: AI TROUBLESHOOTING & DIAGNOSTIC HUD ================= -->
+          <div class="xl:col-span-6 space-y-4">
+            
+            <!-- PANEL A: ACTIVE INCIDENT SELECTED (Stitch Screen 1) -->
+            <div id="hud-active-incident" class="hidden bg-surface-container-lowest border border-hairline">
+              <!-- HUD Header with Contextual Badges -->
+              <div class="p-4 bg-[#ECEBE5] border-b border-hairline">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-label-sm font-label-sm font-semibold uppercase tracking-wider text-secondary">SELECTED DIAGNOSTIC TARGET</span>
+                    <span class="px-2 py-0.5 border border-[#B42318] text-[#B42318] text-code-sm font-code-sm font-semibold bg-surface-container-lowest" id="hud-sev-badge">P1 CRITICAL</span>
+                  </div>
+                  <div class="text-code-sm font-code-sm text-secondary">
+                    TICKET_REF: <span class="text-on-surface font-semibold" id="hud-ticket-ref">INC-0000</span>
+                  </div>
+                </div>
+                <h2 class="text-headline-sm font-headline-sm text-on-surface mb-1" id="hud-ticket-title">
+                  Incident Title
+                </h2>
+                <div class="flex flex-wrap items-center gap-2 text-code-sm font-code-sm text-secondary">
+                  <span class="text-on-surface font-medium" id="hud-customer-name">Account: --</span>
+                  <span>•</span>
+                  <span>Target: <span class="font-code-sm text-on-surface" id="hud-target-component">service</span></span>
+                  <span>•</span>
+                  <span>Status: <span class="font-code-sm text-on-surface font-semibold uppercase" id="hud-ticket-status">OPEN</span></span>
+                </div>
+              </div>
+
+              <!-- Visual Separation: FACTS vs HYPOTHESES -->
+              <div class="p-4 space-y-4">
+                <!-- Section 1: Confirmed Facts -->
+                <div class="border border-hairline">
+                  <div class="bg-surface-container-low px-3 py-2 border-b border-hairline flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="material-symbols-outlined text-[#2F6B4F]">check_circle</span>
+                      <span class="text-label-md font-label-md font-semibold text-on-surface uppercase">CONFIRMED FACTS (TELEMETRY EVIDENCE)</span>
+                    </div>
+                    <span class="text-code-sm font-code-sm text-[#2F6B4F]" id="hud-facts-count">SIGNALS VERIFIED</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-lowest divide-y divide-[#DEDED8] text-body-sm font-body-sm" id="hud-facts-list">
+                    <!-- Populated dynamically -->
+                  </div>
+                </div>
+
+                <!-- Section 2: AI-Generated Hypotheses -->
+                <div class="border border-[#171717]">
+                  <div class="bg-surface-container-low px-3 py-2 border-b border-[#171717] flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="material-symbols-outlined text-primary-container">psychology</span>
+                      <span class="text-label-md font-label-md font-semibold text-on-surface uppercase">AI-GENERATED HYPOTHESES &amp; ROOT CAUSE ANALYSIS</span>
+                    </div>
+                    <span class="text-code-sm font-code-sm font-semibold text-on-surface bg-surface-container-lowest border border-[#171717] px-2 py-0.5" id="hud-confidence-badge">
+                      CONFIDENCE: --%
+                    </span>
+                  </div>
+                  <div class="p-4 bg-surface-container-lowest space-y-3">
+                    <p class="text-body-md font-body-md text-on-surface leading-relaxed" id="hud-hypothesis-text">
+                      Awaiting AI case analysis execution...
+                    </p>
+                    <div class="p-3 bg-surface-container-low border border-hairline text-code-sm font-code-sm space-y-1">
+                      <div class="text-secondary font-semibold uppercase">Real Source Citations (Indexed Documents):</div>
+                      <div id="hud-citations-list" class="space-y-1">
+                        <!-- Real indexed citations -->
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Section 3: Diagnostic Step-by-Step Action Plan -->
+                <div class="border border-hairline">
+                  <div class="bg-surface-container-low px-3 py-2 border-b border-hairline flex items-center justify-between">
+                    <span class="text-label-md font-label-md font-semibold text-on-surface uppercase">Remediation Action Plan</span>
+                    <span class="text-code-sm font-code-sm text-secondary" id="hud-plan-steps-count">STEPS GENERATED</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-lowest space-y-3" id="hud-action-plan-steps">
+                    <!-- Step-by-step items -->
+                  </div>
+                </div>
+
+                <!-- Interactive Action Plan Execution Controls -->
+                <div class="p-3 bg-surface-container-low border-t border-hairline space-y-2">
+                  <div class="text-label-sm font-label-sm uppercase text-secondary">Operator Remediation Controls (Live API Bus):</div>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <button id="btn-action-rebalance" onclick="executeRemediationAction('mock_config_correction')" class="bg-primary-container text-surface-container-lowest px-4 py-2 text-label-md font-label-md font-semibold hover:bg-black transition-colors flex items-center space-x-2 badge-square">
+                      <span class="material-symbols-outlined text-surface-container-lowest">rocket_launch</span>
+                      <span>Execute Config Correction &amp; Invalidation</span>
+                    </button>
+                    <button id="btn-action-trace" onclick="executeRemediationAction('mock_integration_health_check')" class="bg-surface-container-lowest border border-hairline hover:border-on-surface text-on-surface px-3 py-2 text-label-md font-label-md transition-colors flex items-center space-x-1.5">
+                      <span class="material-symbols-outlined">analytics</span>
+                      <span>Trigger Diagnostic Probe</span>
+                    </button>
+                    <button id="btn-action-escalate" onclick="executeRemediationAction('mock_service_escalation')" class="bg-surface-container-lowest border border-hairline hover:border-on-surface text-secondary hover:text-on-surface px-3 py-2 text-label-md font-label-md transition-colors">
+                      Escalate to Infra Lead
+                    </button>
+                  </div>
+                  <div class="text-[10px] text-secondary font-code-sm" id="hud-action-feedback">
+                    Real backend execution via /api/v1/cases/{id}/actions. All invocations cryptographically audited.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- PANEL B: ZERO INCIDENT / STANDBY HUD (Stitch Screen 2) -->
+            <div id="hud-standby" class="bg-surface-container-lowest border border-hairline">
+              <!-- HUD Header with Contextual Readiness Badges -->
+              <div class="p-4 bg-[#ECEBE5] border-b border-hairline">
+                <div class="flex items-center justify-between mb-2">
+                  <div class="flex items-center space-x-2">
+                    <span class="text-label-sm font-label-sm font-semibold uppercase tracking-wider text-secondary">AI REASONING ENGINE</span>
+                    <span class="px-2 py-0.5 border border-[#2F6B4F] text-[#2F6B4F] text-code-sm font-code-sm font-semibold bg-surface-container-lowest">STANDBY // READY</span>
+                  </div>
+                  <div class="text-code-sm font-code-sm text-secondary">
+                    TARGET: <span class="text-secondary font-semibold">NONE SELECTED</span>
+                  </div>
+                </div>
+                <h2 class="text-headline-sm font-headline-sm text-on-surface mb-1">
+                  AI Diagnostic Reasoning &amp; Root Cause Engine
+                </h2>
+                <div class="flex flex-wrap items-center gap-2 text-code-sm font-code-sm text-secondary">
+                  <span class="text-on-surface font-medium">Status: Awaiting Incident Selection</span>
+                  <span>•</span>
+                  <span>Cluster: <span class="font-code-sm text-on-surface">us-east-1 (Prod)</span></span>
+                  <span>•</span>
+                  <span>Evaluation Engine: <span class="font-code-sm text-on-surface">v1.0-fastapi</span></span>
+                </div>
+              </div>
+
+              <!-- Diagnostic Authentic Readiness Panels -->
+              <div class="p-4 space-y-4">
+                <!-- Panel 1: Live Diagnostic Pipeline Status -->
+                <div class="border border-hairline">
+                  <div class="bg-surface-container-low px-3 py-2 border-b border-hairline flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <span class="material-symbols-outlined text-[#2F6B4F]">check_circle</span>
+                      <span class="text-label-md font-label-md font-semibold text-on-surface uppercase">DIAGNOSTIC PIPELINE STATUS: IDLE / READY</span>
+                    </div>
+                    <span class="text-code-sm font-code-sm text-[#2F6B4F] font-semibold">ALL SYSTEMS LIVE</span>
+                  </div>
+                  <div class="p-3 bg-surface-container-lowest divide-y divide-[#DEDED8] text-body-sm font-body-sm">
+                    <div class="py-2.5 flex items-center justify-between">
+                      <div class="flex items-center space-x-2.5">
+                        <span class="w-2 h-2 bg-[#2F6B4F] inline-block"></span>
+                        <div>
+                          <div class="font-medium text-on-surface">Vector Embeddings DB</div>
+                          <div class="text-code-sm text-secondary font-code-sm" id="standby-vector-desc">pgvector instance: indexed &amp; synchronized (3 runbooks, 13 chunks)</div>
+                        </div>
+                      </div>
+                      <span class="text-code-sm font-code-sm px-1.5 py-0.5 border border-[#2F6B4F] text-[#2F6B4F] bg-surface-container-low">ONLINE</span>
+                    </div>
+                    <div class="py-2.5 flex items-center justify-between">
+                      <div class="flex items-center space-x-2.5">
+                        <span class="w-2 h-2 bg-[#2F6B4F] inline-block"></span>
+                        <div>
+                          <div class="font-medium text-on-surface">Inference Gateway</div>
+                          <div class="text-code-sm text-secondary font-code-sm">LLM reasoning cluster: Gemini / OpenAI / Groq / Stub adapter</div>
+                        </div>
+                      </div>
+                      <span class="text-code-sm font-code-sm px-1.5 py-0.5 border border-hairline text-on-surface bg-surface-container-low">CONNECTED</span>
+                    </div>
+                    <div class="py-2.5 flex items-center justify-between">
+                      <div class="flex items-center space-x-2.5">
+                        <span class="w-2 h-2 bg-[#2F6B4F] inline-block"></span>
+                        <div>
+                          <div class="font-medium text-on-surface">Telemetry Log Parser</div>
+                          <div class="text-code-sm text-secondary font-code-sm">Real-time parser listening to cluster WebSocket feed</div>
+                        </div>
+                      </div>
+                      <span class="text-code-sm font-code-sm px-1.5 py-0.5 border border-[#2F6B4F] text-[#2F6B4F] bg-surface-container-low">LISTENING</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Panel 2: Incident Context Awaiting -->
+                <div class="border border-hairline bg-surface-container-lowest p-4">
+                  <div class="flex items-start space-x-3">
+                    <div class="w-8 h-8 bg-surface-container-low border border-hairline flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span class="material-symbols-outlined text-secondary">hourglass_empty</span>
+                    </div>
+                    <div class="space-y-1">
+                      <h4 class="text-label-md font-label-md font-semibold text-on-surface uppercase tracking-wider">
+                        INCIDENT CONTEXT AWAITING
+                      </h4>
+                      <p class="text-body-sm font-body-sm text-secondary leading-relaxed">
+                        Select an active incident from the queue or submit an operator diagnostic query to trigger automated hypothesis generation, metric log correlation, and remediation action planning.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Interactive Quick Intake Form / Ad-Hoc Diagnostic Command -->
+                <div class="border border-hairline bg-surface-container-lowest">
+                  <div class="bg-surface-container-low px-3 py-2 border-b border-hairline flex items-center justify-between">
+                    <span class="text-label-md font-label-md font-semibold text-on-surface uppercase">Run Ad-Hoc Diagnostic Command</span>
+                    <span class="text-code-sm font-code-sm text-secondary">OPERATOR CLI</span>
+                  </div>
+                  <div class="p-3 space-y-3">
+                    <div class="flex flex-col sm:flex-row gap-2">
+                      <input id="adhoc-cmd-input" class="bg-surface-container-low border border-hairline px-3 py-2 text-code-sm font-code-sm placeholder:text-secondary focus:ring-1 focus:ring-on-surface flex-grow text-on-surface" placeholder="e.g. ping auth-service --probe health" type="text" value="ping auth-service"/>
+                      <button onclick="runAdHocCliCommand()" class="bg-on-surface text-surface-container-lowest px-4 py-2 text-label-md font-label-md hover:bg-black transition-colors whitespace-nowrap flex items-center justify-center space-x-1.5">
+                        <span class="material-symbols-outlined text-surface-container-lowest">play_arrow</span>
+                        <span>Run Verification</span>
+                      </button>
+                    </div>
+                    <div class="flex items-center space-x-2 text-[11px] text-secondary font-code-sm">
+                      <span>Quick targets:</span>
+                      <button onclick="setAdHocInput('ping auth-service')" class="underline hover:text-on-surface">ping auth-service</button>
+                      <span>•</span>
+                      <button onclick="setAdHocInput('check kafka lag')" class="underline hover:text-on-surface">check kafka lag</button>
+                      <span>•</span>
+                      <button onclick="setAdHocInput('verify crm webhook')" class="underline hover:text-on-surface">verify crm webhook</button>
+                    </div>
+                    <div id="adhoc-output-box" class="hidden p-2.5 bg-surface-container-low border border-hairline text-code-sm font-code-sm text-on-surface whitespace-pre-wrap"></div>
+                  </div>
+                </div>
+
+                <!-- Clear Disclaimer on Zero Dummy Data -->
+                <div class="p-3 bg-surface-container-low border border-hairline text-code-sm font-code-sm text-secondary flex items-start space-x-2.5">
+                  <span class="material-symbols-outlined text-primary-container text-base mt-0.5">policy</span>
+                  <div class="leading-relaxed">
+                    <strong class="text-on-surface font-semibold">Zero-Dummy-Data Enforced:</strong> AI hypotheses and recommendations are generated exclusively in response to verified cluster incidents and real telemetry payloads. No speculative or hallucinated incident artifacts are displayed.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= VIEW 2: AI TROUBLESHOOTING ================= -->
+      <div id="view-troubleshooting" class="hidden space-y-6">
+        <div class="border-b border-hairline pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-headline-md font-headline-md text-on-surface">AI Troubleshooting Assistant</h2>
+            <p class="text-body-sm font-body-sm text-secondary">Interactive diagnostic dialogue with live retrieval from indexed engineering runbooks.</p>
+          </div>
+          <button onclick="startNewTroubleshootingConversation()" class="bg-on-surface text-surface-container-lowest px-4 py-2 text-label-md font-label-md hover:bg-black transition-colors flex items-center space-x-2 self-start">
+            <span class="material-symbols-outlined">chat</span>
+            <span>New Troubleshooting Session</span>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Chat Dialogue Column -->
+          <div class="lg:col-span-7 bg-surface-container-lowest border border-hairline flex flex-col h-[650px]">
+            <div class="p-3 bg-[#ECEBE5] border-b border-hairline flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <span class="material-symbols-outlined text-primary">smart_toy</span>
+                <span class="font-semibold text-on-surface text-label-md uppercase" id="chat-conversation-title">Session: Ready</span>
+              </div>
+              <span class="text-code-sm font-code-sm text-secondary" id="chat-conversation-id">CID: None</span>
+            </div>
+
+            <!-- Messages Stream -->
+            <div class="flex-grow p-4 overflow-y-auto space-y-4" id="chat-messages-container">
+              <div class="p-4 bg-surface-container-low border border-hairline text-body-md text-secondary text-center">
+                Type an issue below to start diagnostic reasoning against indexed runbooks (e.g., "Kafka consumer lag spiking on partition 4" or "API returning HTTP 401 unauthorized").
+              </div>
+            </div>
+
+            <!-- Input Box -->
+            <div class="p-3 bg-surface-container-low border-t border-hairline">
+              <form id="chat-form" onsubmit="submitChatMessage(event)" class="flex gap-2">
+                <input id="chat-input" class="flex-grow bg-surface-container-lowest border border-hairline px-3 py-2 text-body-sm font-body-sm text-on-surface focus:ring-1 focus:ring-on-surface" placeholder="Describe the symptom, error code, or affected microservice..." type="text" autocomplete="off"/>
+                <button type="submit" id="btn-chat-send" class="bg-on-surface text-surface-container-lowest px-4 py-2 text-label-md font-label-md hover:bg-black transition-colors flex items-center space-x-1">
+                  <span>Send</span>
+                  <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Step-by-Step Diagnostic Runner & Escalation Column -->
+          <div class="lg:col-span-5 space-y-4">
+            <!-- Active Diagnostic Session Card -->
+            <div class="bg-surface-container-lowest border border-hairline">
+              <div class="p-3 bg-[#ECEBE5] border-b border-hairline flex items-center justify-between">
+                <span class="font-semibold text-on-surface text-label-md uppercase">Diagnostic Execution Step</span>
+                <span class="text-code-sm font-code-sm text-[#2F6B4F]" id="diag-session-status">STANDBY</span>
+              </div>
+              <div class="p-4 space-y-4" id="diag-runner-content">
+                <p class="text-body-sm font-body-sm text-secondary">
+                  When a diagnostic session is initiated from a conversation, step-by-step verification prompts will render here.
+                </p>
+                <button onclick="triggerDiagnosticSessionForCurrentChat()" class="w-full bg-surface-container-lowest border border-hairline hover:border-on-surface text-on-surface py-2 px-3 text-label-md font-label-md flex items-center justify-center space-x-2">
+                  <span class="material-symbols-outlined text-primary-container">play_arrow</span>
+                  <span>Start Automated Step-by-Step Diagnostic</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Citations & Runbook Evidence -->
+            <div class="bg-surface-container-lowest border border-hairline">
+              <div class="p-3 bg-[#ECEBE5] border-b border-hairline">
+                <span class="font-semibold text-on-surface text-label-md uppercase">Retrieved Runbook Evidence</span>
+              </div>
+              <div class="p-3 space-y-2 text-code-sm font-code-sm" id="chat-retrieved-evidence">
+                <div class="text-secondary italic">No citations retrieved yet.</div>
+              </div>
+            </div>
+
+            <!-- Manual Escalation -->
+            <div class="bg-surface-container-lowest border border-hairline p-4 space-y-2">
+              <div class="font-semibold text-on-surface text-label-md uppercase">Human Tier 2 Escalation</div>
+              <p class="text-body-sm font-body-sm text-secondary">If AI cannot determine root cause, escalate the case directly to on-call Site Reliability Engineering.</p>
+              <button onclick="escalateCurrentConversation()" class="border border-[#B42318] text-[#B42318] hover:bg-error-container/20 px-3 py-1.5 text-label-md font-label-md transition-colors flex items-center space-x-1.5">
+                <span class="material-symbols-outlined">person_alert</span>
+                <span>Escalate Conversation to Tier 2</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 3: INCIDENTS & TICKETS ================= -->
+      <div id="view-incidents" class="hidden space-y-6">
+        <div class="border-b border-hairline pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-headline-md font-headline-md text-on-surface">Verified Incident Management &amp; Tickets</h2>
+            <p class="text-body-sm font-body-sm text-secondary">Live ticket records persisted in database. Zero synthetic mock records.</p>
+          </div>
+          <button onclick="openIntakeModal()" class="bg-on-surface text-surface-container-lowest px-4 py-2 text-label-md font-label-md hover:bg-black transition-colors flex items-center space-x-2 self-start">
+            <span class="material-symbols-outlined">add</span>
+            <span>Create New Ticket</span>
+          </button>
+        </div>
+
+        <div class="bg-surface-container-lowest border border-hairline overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-hairline bg-surface-container-low text-secondary text-label-sm font-label-sm uppercase">
+                <th class="py-3 px-4 font-semibold">Ticket ID</th>
+                <th class="py-3 px-4 font-semibold">Title</th>
+                <th class="py-3 px-4 font-semibold">Customer ID</th>
+                <th class="py-3 px-4 font-semibold">Severity</th>
+                <th class="py-3 px-4 font-semibold">Status</th>
+                <th class="py-3 px-4 font-semibold">Created At</th>
+                <th class="py-3 px-4 font-semibold text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-[#DEDED8] text-body-sm font-body-sm" id="full-tickets-table-body">
+              <!-- Populated via GET /api/v1/tickets -->
+            </tbody>
+          </table>
+          <div id="full-tickets-empty" class="p-8 text-center text-secondary font-body-md">
+            No tickets found in database. Use "Create New Ticket" to intake a real customer issue.
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 4: COMMAND CENTER ================= -->
+      <div id="view-command" class="hidden space-y-6">
+        <div class="border-b border-hairline pb-4">
+          <h2 class="text-headline-md font-headline-md text-on-surface">Cluster Command Center &amp; Operator Actions</h2>
+          <p class="text-body-sm font-body-sm text-secondary">Execute authorized diagnostic probes and safe simulated actions against microservices.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="bg-surface-container-lowest border border-hairline p-5 space-y-4">
+            <h3 class="text-headline-sm font-headline-sm text-on-surface">Operator CLI Dispatcher</h3>
+            <p class="text-body-sm text-secondary">Dispatches verifiable actions through the backend ActionService.</p>
+            
+            <div class="space-y-3">
+              <div>
+                <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Target Action</label>
+                <select id="cli-action-select" class="w-full bg-surface-container-low border border-hairline p-2 text-code-sm text-on-surface">
+                  <option value="mock_integration_health_check">mock_integration_health_check (Synthetic probe / latency)</option>
+                  <option value="mock_config_correction">mock_config_correction (Invalidate token cache &amp; reload)</option>
+                  <option value="mock_service_escalation">mock_service_escalation (Escalate to L2 DevOps on-call)</option>
+                  <option value="mock_compensation">mock_compensation (Credit adjustment - requires approval)</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Target Parameter (JSON or String)</label>
+                <input id="cli-param-input" class="w-full bg-surface-container-low border border-hairline p-2 text-code-sm text-on-surface" value='{"target_service": "api_gateway"}'/>
+              </div>
+
+              <div class="flex items-center space-x-2">
+                <input id="cli-confirm-approval" type="checkbox" checked class="border-hairline text-primary focus:ring-0"/>
+                <label for="cli-confirm-approval" class="text-body-sm text-on-surface font-medium">Confirmed Operator Authorization (Required for consequential actions)</label>
+              </div>
+
+              <button onclick="dispatchCliAction()" class="bg-on-surface text-surface-container-lowest px-4 py-2 text-label-md font-label-md hover:bg-black transition-colors flex items-center space-x-2">
+                <span class="material-symbols-outlined">send</span>
+                <span>Dispatch Action via API</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-surface-container-lowest border border-hairline p-5 flex flex-col">
+            <div class="flex items-center justify-between border-b border-hairline pb-2 mb-3">
+              <span class="text-label-sm font-label-sm font-semibold uppercase text-secondary">CLI Output &amp; Audit Logs</span>
+              <span class="text-code-sm text-[#2F6B4F]">AUDITED</span>
+            </div>
+            <pre id="cli-output-pre" class="flex-grow bg-surface-container-low border border-hairline p-3 font-code-sm text-code-sm text-on-surface overflow-y-auto max-h-96 whitespace-pre-wrap">Ready. Select an action and click Dispatch Action.</pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 5: KNOWLEDGE BASE ================= -->
+      <div id="view-kb" class="hidden space-y-6">
+        <div class="border-b border-hairline pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-headline-md font-headline-md text-on-surface">Knowledge Base &amp; Indexed Runbooks</h2>
+            <p class="text-body-sm font-body-sm text-secondary">Semantic vector search and chunk inspector backed by real embeddings.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <input id="kb-search-box" oninput="debounceKbSearch()" placeholder="Search indexed runbooks..." class="bg-surface-container-lowest border border-hairline px-3 py-1.5 text-code-sm w-72 text-on-surface"/>
+            <button onclick="loadKnowledgeDocs()" class="bg-surface-container-lowest border border-hairline px-3 py-1.5 text-label-md hover:border-on-surface">Refresh</button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div class="lg:col-span-5 space-y-4">
+            <div class="bg-surface-container-lowest border border-hairline p-4">
+              <h3 class="text-label-md font-label-md font-semibold text-on-surface uppercase mb-3">Indexed Documents (Database)</h3>
+              <div class="divide-y divide-hairline space-y-2" id="kb-documents-list">
+                <!-- Loaded from GET /api/v1/knowledge/documents -->
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 space-y-4">
+            <div class="bg-surface-container-lowest border border-hairline p-4">
+              <h3 class="text-label-md font-label-md font-semibold text-on-surface uppercase mb-3" id="kb-preview-header">Semantic Search &amp; Document Chunks</h3>
+              <div id="kb-chunks-container" class="space-y-3 max-h-[500px] overflow-y-auto font-code-sm text-code-sm">
+                <div class="p-4 bg-surface-container-low border border-hairline text-secondary text-center">
+                  Select a document on the left or type a search query above to view indexed text chunks.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= VIEW 6: ADMIN ANALYTICS ================= -->
+      <div id="view-analytics" class="hidden space-y-6">
+        <div class="border-b border-hairline pb-4">
+          <h2 class="text-headline-md font-headline-md text-on-surface">Telemetry &amp; Operational Analytics</h2>
+          <p class="text-body-sm font-body-sm text-secondary">Verified aggregated metrics from PostgreSQL / SQLite. Zero fabricated figures.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="analytics-cards-grid">
+          <!-- Loaded via GET /api/v1/analytics/overview -->
+        </div>
+
+        <div class="bg-surface-container-lowest border border-hairline p-5">
+          <h3 class="text-headline-sm font-headline-sm text-on-surface mb-2">Zero-Simulation Telemetry Policy</h3>
+          <p class="text-body-md font-body-md text-secondary leading-relaxed max-w-3xl">
+            In strict compliance with PSAI architectural standards, this system prohibits synthetic KPI estimation. If sample size (n) is insufficient to compute statistical metrics such as CSAT or MTTR with a 95% confidence interval, the metric is honestly flagged as Unavailable rather than simulated.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ================= INTAKE MODAL (CTRL+D) ================= -->
+  <div id="intake-modal" class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-lowest border border-hairline w-full max-w-lg shadow-2xl p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-hairline pb-3">
+        <div class="flex items-center space-x-2">
+          <span class="material-symbols-outlined text-primary-container">troubleshoot</span>
+          <h3 class="text-headline-sm font-headline-sm text-on-surface">Intake New Technical Incident</h3>
+        </div>
+        <button onclick="closeIntakeModal()" class="text-secondary hover:text-on-surface">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <form id="intake-form" onsubmit="submitIncidentIntake(event)" class="space-y-4">
+        <div>
+          <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Customer / Organization Identifier</label>
+          <input id="intake-customer" required class="w-full bg-surface-container-low border border-hairline p-2 text-body-sm text-on-surface" placeholder="e.g. Apex Financial (cust_891)"/>
+        </div>
+
+        <div>
+          <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Incident Title / Brief</label>
+          <input id="intake-title" required class="w-full bg-surface-container-low border border-hairline p-2 text-body-sm text-on-surface" placeholder="e.g. Kafka Consumer Lag Spillover in Auth-Service"/>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Initial Severity</label>
+            <select id="intake-sev" class="w-full bg-surface-container-low border border-hairline p-2 text-body-sm text-on-surface">
+              <option value="P1">P1 - Critical (Outage / Degradation)</option>
+              <option value="P2">P2 - Warning (Elevated Errors)</option>
+              <option value="P3">P3 - Minor / Info</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Target Component</label>
+            <input id="intake-component" class="w-full bg-surface-container-low border border-hairline p-2 text-body-sm text-on-surface" placeholder="e.g. svc-auth" value="svc-auth"/>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-label-sm font-label-sm text-secondary uppercase block mb-1">Detailed Technical Symptoms &amp; Observed Error Logs</label>
+          <textarea id="intake-symptom" rows="4" required class="w-full bg-surface-container-low border border-hairline p-2 text-body-sm text-on-surface" placeholder="Consumer lag hit 48,190 messages on topic: auth.session.events. Pod OOMKilled with exit code 137. Latency spiked to 4200ms."></textarea>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-2 border-t border-hairline">
+          <button type="button" onclick="closeIntakeModal()" class="px-4 py-2 border border-hairline text-label-md font-label-md hover:border-on-surface">Cancel</button>
+          <button type="submit" id="btn-submit-intake" class="bg-on-surface text-surface-container-lowest px-5 py-2 text-label-md font-label-md hover:bg-black transition-colors flex items-center space-x-1.5">
+            <span class="material-symbols-outlined text-sm">rocket_launch</span>
+            <span>Create &amp; Initiate Diagnostics</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Real Application Logic Connecting to PSAI Backend -->
+  <script src="/app.js"></script>
+</body>
+</html>
