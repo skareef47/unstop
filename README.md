@@ -217,3 +217,5 @@ pytest -v
 - **Scenario 3:** Ambiguous complaint ("system slow and not working") that correctly identifies missing information, asks targeted clarifying questions, and avoids false escalation.
 - **Scenario 4:** Suspected widespread outage (HTTP 500 spike across all users) that triggers mandatory critical escalation, validates database connection pool saturation, and dispatches PagerDuty alerts to Incident Command.
 - **Unit & Security Suites:** Conversation persistence, message idempotency, knowledge vector search, prompt injection resistance, sensitive data masking, rate limiting, and WebSockets.
+#   u n s t o p  
+ 
